@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Staff Login</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="container">
+<div class="logo">NHS</div>
+<h1>Create Staff Login</h1>
+<p>New logins are added to the Java database</p>
+
+<form id="registerForm" class="form">
+<label for="fullName">Full name</label>
+<input id="fullName" name="fullName" autocomplete="name" required>
+
+<label for="role">Role</label>
+<input id="role" name="role" placeholder="Clinical Staff" required>
+
+<label for="username">Username</label>
+<input id="username" name="username" autocomplete="username" required>
+
+<label for="password">Password</label>
+<input id="password" name="password" type="password" autocomplete="new-password" minlength="8" required>
+
+<button class="green" type="submit">Create Login</button>
+</form>
+
+<p id="result" class="status"></p>
+
+<nav class="links" aria-label="Demo pages">
+<a href="index.html">Back to login</a>
+<a href="database.html">Login database</a>
+<a href="server.html">Server logs</a>
+</nav>
+</main>
+
+<script>
+const form = document.getElementById("registerForm");
+const result = document.getElementById("result");
+
+form.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const payload = {
+    fullName: form.fullName.value.trim(),
+    role: form.role.value.trim(),
+    username: form.username.value.trim(),
+    password: form.password.value
+  };
+  result.textContent = "Creating login...";
+  result.className = "status";
+
+  try {
+    const response = await fetch("/api/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    const data = await response.json();
+
+    if (!response.ok) {
+      result.textContent = data.message;
+      result.className = "status error";
+      return;
+    }
+
+    result.textContent = `${data.message}: ${data.user}`;
+    result.className = "status success";
+    localStorage.setItem("nhsPendingBiometricUser", data.user);
+  } catch (error) {
+    result.textContent = "Could not reach the Java register server.";
+    result.className = "status error";
+  }
+});
+</script>
+</body>
+</html>

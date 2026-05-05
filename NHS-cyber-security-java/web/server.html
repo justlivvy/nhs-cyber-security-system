@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Server Logs</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="blackscreen">
+<main class="card">
+<h1>Java Server Logs</h1>
+<div id="logs" class="terminal-lines">Loading logs...</div>
+<nav class="links dark-links" aria-label="Demo pages">
+<a href="index.html">Home</a>
+<a href="register.html">Create login</a>
+<a href="dashboard.html">Dashboard</a>
+<a href="database.html">Login database</a>
+<a href="sqlmap.html">Legacy breach</a>
+</nav>
+</main>
+
+<script>
+async function loadLogs() {
+  const logs = document.getElementById("logs");
+  try {
+    const response = await fetch("/api/logs");
+    const data = await response.json();
+    logs.innerHTML = data.logs.map(line => `<p>&gt; ${line}</p>`).join("");
+  } catch (error) {
+    logs.textContent = "Could not reach Java server logs.";
+  }
+}
+
+loadLogs();
+</script>
+</body>
+</html>
