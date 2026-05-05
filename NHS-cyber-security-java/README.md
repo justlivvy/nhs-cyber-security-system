@@ -1,44 +1,97 @@
-# NHS Cyber Security Java + HTML Demo
+ NHS Cyber Security System
 
-This version keeps the HTML screens and adds a Java backend so the pages link to real endpoints.
-It includes a staff login system and a CSV login database.
+This is a Java and HTML demo of an NHS-style cyber security login system.
 
-## Run
+The project shows how a staff login, biometric login demo, server logs, and a login database can link together through a Java backend.
 
-```powershell
-cd "C:\Users\oliwi\Documents\Codex\2026-05-05\files-mentioned-by-the-user-nhs\NHS-cyber-security-java"
-javac -d build src\NhsCyberSecurityApp.java
-java -cp build NhsCyberSecurityApp
-```
+## Features
 
-Then open:
+- Staff username and password login
+- Create new staff login accounts
+- Simple staff dashboard after login
+- Biometric registration/login demo linked to staff accounts
+- Server logs page showing login activity
+- Login database page showing stored users
+- Legacy breach demo page for comparison
+- Automated test script
 
-```text
-http://127.0.0.1:8080/
-```
-
-Default login:
+## Default Login
 
 ```text
 Username: nhs.staff
 Password: NHSdemo123!
 ```
 
-The login database is stored at:
+## How To Run
+
+Open the project folder in PowerShell, then run:
+
+```powershell
+javac -d build src\NhsCyberSecurityApp.java
+java -cp build NhsCyberSecurityApp
+```
+
+Then open this in a browser:
+
+```text
+http://127.0.0.1:8080/
+```
+
+## Project Structure
+
+```text
+src/NhsCyberSecurityApp.java   Java backend server
+web/index.html                 Staff login page
+web/register.html              Create staff login page
+web/dashboard.html             Staff dashboard
+web/popup.html                 Biometric demo page
+web/database.html              Login database page
+web/server.html                Server logs page
+web/sqlmap.html                Legacy breach demo
+web/style.css                  Page styling
+data/logins.csv                Login database
+test.ps1                       Test script
+```
+
+## Database
+
+The login database is stored in:
 
 ```text
 data/logins.csv
 ```
 
-Passwords are stored as salted PBKDF2 hashes, not plain text.
-If Java cannot write to that file because the folder is protected, the app automatically uses a writable temp database and shows the active path on the Login Database page.
+Passwords are not stored as plain text. They are stored as salted PBKDF2 password hashes.
 
-## Test
+The database page shows users, roles, biometric IDs, password hash previews, and login times.
+
+## How To Test
+
+Run this in PowerShell from the project folder:
 
 ```powershell
-cd "C:\Users\oliwi\Documents\Codex\2026-05-05\files-mentioned-by-the-user-nhs\NHS-cyber-security-java"
 .\test.ps1
 ```
 
-The test compiles the Java app, starts it on port 19090, checks the main HTML page, creates a staff login, tests login, tests biometric linking, checks server logs, and checks the login database.
-It uses a temporary build folder under your Windows temp directory, so test output does not clutter the project.
+The test checks that:
+
+- the Java app compiles
+- the website opens
+- staff registration works
+- staff login works
+- biometric linking works
+- server logs are recorded
+- the login database returns users
+- the legacy breach page data loads
+
+## Sharing With Group Members
+
+Upload the whole project folder to GitHub.
+
+Group members can download it, open the folder in PowerShell, run the Java commands above, and open:
+
+```text
+http://127.0.0.1:8080/
+```
+
+This runs on their own computer unless the project is deployed online.
