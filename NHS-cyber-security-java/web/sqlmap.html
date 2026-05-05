@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Legacy System Breach</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="blackscreen">
+<main class="card">
+<h1>SQLMap Attack - Legacy System</h1>
+<p>&gt; Dumping table users...</p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>User</th>
+<th>biometric_hash</th>
+</tr>
+</thead>
+<tbody id="legacyRows">
+<tr><td colspan="3">Loading legacy data...</td></tr>
+</tbody>
+</table>
+<p id="legacyStatus" class="red"></p>
+<nav class="links dark-links" aria-label="Demo pages">
+<a href="index.html">Home</a>
+<a href="register.html">Create login</a>
+<a href="server.html">Server logs</a>
+<a href="database.html">Login database</a>
+</nav>
+</main>
+
+<script>
+async function loadLegacyBreach() {
+  const rows = document.getElementById("legacyRows");
+  const status = document.getElementById("legacyStatus");
+  try {
+    const response = await fetch("/api/legacy-breach");
+    const data = await response.json();
+    rows.innerHTML = data.users.map(item => `
+      <tr>
+        <td>${item.id}</td>
+        <td>${item.user}</td>
+        <td>${item.biometric_hash}</td>
+      </tr>
+    `).join("");
+    status.textContent = data.status;
+  } catch (error) {
+    rows.innerHTML = "<tr><td colspan=\"3\">Could not reach Java legacy endpoint.</td></tr>";
+  }
+}
+
+loadLegacyBreach();
+</script>
+</body>
+</html>

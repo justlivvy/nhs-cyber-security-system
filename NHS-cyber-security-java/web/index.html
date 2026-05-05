@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NHS Secure Login</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="container">
+<div class="logo">NHS</div>
+<h1>Staff Login Portal</h1>
+<p>Secure access to NHS electronic health records</p>
+
+<form id="loginForm" class="form">
+<label for="username">Username</label>
+<input id="username" name="username" autocomplete="username" required>
+
+<label for="password">Password</label>
+<input id="password" name="password" type="password" autocomplete="current-password" required>
+
+<button class="green" type="submit">Login</button>
+</form>
+
+<p id="result" class="status"></p>
+
+<button class="blue" onclick="window.location='register.html'">Create Staff Login</button>
+<button class="secondary" onclick="window.location='popup.html?action=login'">Biometric Login</button>
+
+<nav class="links" aria-label="Demo pages">
+<a href="dashboard.html">Dashboard</a>
+<a href="server.html">Server logs</a>
+<a href="database.html">Login database</a>
+<a href="sqlmap.html">Legacy breach</a>
+</nav>
+
+<p class="muted">Demo account: nhs.staff / NHSdemo123!</p>
+</main>
+
+<script>
+const form = document.getElementById("loginForm");
+const result = document.getElementById("result");
+
+form.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const username = form.username.value.trim();
+  const password = form.password.value;
+  result.textContent = "Checking login with Java server...";
+  result.className = "status";
+
+  try {
+    const response = await fetch("/api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password })
+    });
+    const data = await response.json();
+
+    if (!response.ok) {
+      result.textContent = data.message;
+      result.className = "status error";
+      return;
+    }
+
+    localStorage.setItem("nhsUser", JSON.stringify(data));
+    result.textContent = `${data.message}: ${data.fullName}`;
+    result.className = "status success";
+    window.location = "dashboard.html";
+  } catch (error) {
+    result.textContent = "Could not reach the Java login server.";
+    result.className = "status error";
+  }
+});
+</script>
+</body>
+</html>
